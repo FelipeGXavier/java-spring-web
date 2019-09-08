@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.felipe.xavier.domain.Categoria;
 import com.felipe.xavier.services.CategoriaService;
 
+
 @RestController
 @RequestMapping(value="/categorias")
 public class CategoriaResource {
@@ -18,8 +19,8 @@ public class CategoriaResource {
 	private CategoriaService service;
 	
 	@RequestMapping(value="/{id}",method=RequestMethod.GET)
-	public ResponseEntity<?> find(@PathVariable Integer id) {
+	public ResponseEntity<?> find(@PathVariable Integer id)  {
 		Categoria obj = service.buscaPorId(id);
-		return ResponseEntity.ok(obj);
+		return ResponseEntity.ok().body(obj);
 	}
 }

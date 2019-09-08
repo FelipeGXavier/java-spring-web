@@ -27,6 +27,7 @@ public class SpringmcApplication implements CommandLineRunner{
 	
 	@Override
 	public void run(String... args) throws Exception {
+		
 		Categoria c1 = new Categoria(null, "Teste 1 ");
 		Categoria c2 = new Categoria(null, "Teste 2 ");
 		
