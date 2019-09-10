@@ -8,8 +8,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.felipe.xavier.domain.Categoria;
+import com.felipe.xavier.domain.Cidade;
+import com.felipe.xavier.domain.Estado;
 import com.felipe.xavier.domain.Produto;
 import com.felipe.xavier.repositories.CategoriaRepository;
+import com.felipe.xavier.repositories.CidadeRepository;
+import com.felipe.xavier.repositories.EstadoRepository;
 import com.felipe.xavier.repositories.ProdutoRepository;
 
 @SpringBootApplication
@@ -25,6 +29,12 @@ public class SpringmcApplication implements CommandLineRunner{
 	@Autowired
 	ProdutoRepository produtoRepository;
 	
+	@Autowired
+	EstadoRepository estadoRepository;
+	
+	@Autowired
+	CidadeRepository cidadeRepository;
+	
 	@Override
 	public void run(String... args) throws Exception {
 		
@@ -39,6 +49,13 @@ public class SpringmcApplication implements CommandLineRunner{
 		
 		c1.getProdutos().addAll(Arrays.asList(p1, p2));
 		c2.getProdutos().addAll(Arrays.asList(p1));
+		
+		Estado e1 = new Estado(null, "SC");
+		Cidade cidade1 = new Cidade(null, "Rio do Sul", e1);
+		e1.getCidades().addAll(Arrays.asList(cidade1));
+
+		estadoRepository.saveAll(Arrays.asList(e1));
+		cidadeRepository.saveAll(Arrays.asList(cidade1));
 		
 		categoriaRepository.saveAll(Arrays.asList(c1,c2));
 		produtoRepository.saveAll(Arrays.asList(p1,p2));
