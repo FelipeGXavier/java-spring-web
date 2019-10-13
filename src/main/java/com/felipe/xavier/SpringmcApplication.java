@@ -1,7 +1,8 @@
 package com.felipe.xavier;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Set;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -11,13 +12,22 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import com.felipe.xavier.domain.Categoria;
 import com.felipe.xavier.domain.Cidade;
 import com.felipe.xavier.domain.Cliente;
+import com.felipe.xavier.domain.Endereco;
 import com.felipe.xavier.domain.Estado;
+import com.felipe.xavier.domain.Pagamento;
+import com.felipe.xavier.domain.PagamentoComBoleto;
+import com.felipe.xavier.domain.PagamentoComCartao;
+import com.felipe.xavier.domain.Pedido;
 import com.felipe.xavier.domain.Produto;
+import com.felipe.xavier.domain.enums.EstadoPagamento;
 import com.felipe.xavier.domain.enums.TipoCliente;
 import com.felipe.xavier.repositories.CategoriaRepository;
 import com.felipe.xavier.repositories.CidadeRepository;
 import com.felipe.xavier.repositories.ClienteRepository;
+import com.felipe.xavier.repositories.EnderecoRepository;
 import com.felipe.xavier.repositories.EstadoRepository;
+import com.felipe.xavier.repositories.PagamentoRepository;
+import com.felipe.xavier.repositories.PedidoRepository;
 import com.felipe.xavier.repositories.ProdutoRepository;
 
 @SpringBootApplication
@@ -41,6 +51,15 @@ public class SpringmcApplication implements CommandLineRunner {
 
 	@Autowired
 	ClienteRepository clienteRepository;
+
+	@Autowired
+	PagamentoRepository pagamentoRepository;
+
+	@Autowired
+	PedidoRepository pedidoRepository;
+
+	@Autowired
+	EnderecoRepository enderecoRepository;
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -67,12 +86,26 @@ public class SpringmcApplication implements CommandLineRunner {
 		categoriaRepository.saveAll(Arrays.asList(c1, c2));
 		produtoRepository.saveAll(Arrays.asList(p1, p2));
 
-		
-		// Integer id, String nome, String email, String cpfOuCnpj, TipoCliente tipo, Set<String> telefones
-		Cliente cli1 = new Cliente(null, "Maria Silva", "maria@gmail.com", "36378912377", TipoCliente.PESSOAFISICA);
-		cli1.getTelefones().addAll(Arrays.asList("27363323", "93838393"));
-		clienteRepository.saveAll(Arrays.asList(cli1));
-		
+		// Integer id, String nome, String email, String cpfOuCnpj, TipoCliente tipo,
+		// Set<String> telefones
+		Cliente cl = new Cliente(null, "Maria Silva", "maria@gmail.com", "36378912377", TipoCliente.PESSOAFISICA);
+		cl.getTelefones().addAll(Arrays.asList("27363323", "93838393"));
+		clienteRepository.saveAll(Arrays.asList(cl));
+
+		Endereco endereco1 = new Endereco(null, "ABC", "256", "Casa", "Centro", "89160075", cl, cidade1);
+		enderecoRepository.save(endereco1);
+
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+
+		Pedido ped1 = new Pedido(null, sdf.parse("30/09/2017 10:32"), cl, endereco1);
+
+		Pagamento pagto1 = new PagamentoComCartao(null, EstadoPagamento.QUITADO, 6, ped1);
+		ped1.setPagamento(pagto1);
+
+		cl.getPedidos().addAll(Arrays.asList(ped1));
+
+		pedidoRepository.saveAll(Arrays.asList(ped1));
+		pagamentoRepository.saveAll(Arrays.asList(pagto1));
 
 	}
 
