@@ -2,7 +2,6 @@ package com.felipe.xavier;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -14,8 +13,8 @@ import com.felipe.xavier.domain.Cidade;
 import com.felipe.xavier.domain.Cliente;
 import com.felipe.xavier.domain.Endereco;
 import com.felipe.xavier.domain.Estado;
+import com.felipe.xavier.domain.ItemPedido;
 import com.felipe.xavier.domain.Pagamento;
-import com.felipe.xavier.domain.PagamentoComBoleto;
 import com.felipe.xavier.domain.PagamentoComCartao;
 import com.felipe.xavier.domain.Pedido;
 import com.felipe.xavier.domain.Produto;
@@ -26,6 +25,7 @@ import com.felipe.xavier.repositories.CidadeRepository;
 import com.felipe.xavier.repositories.ClienteRepository;
 import com.felipe.xavier.repositories.EnderecoRepository;
 import com.felipe.xavier.repositories.EstadoRepository;
+import com.felipe.xavier.repositories.ItemPedidoRepository;
 import com.felipe.xavier.repositories.PagamentoRepository;
 import com.felipe.xavier.repositories.PedidoRepository;
 import com.felipe.xavier.repositories.ProdutoRepository;
@@ -60,6 +60,9 @@ public class SpringmcApplication implements CommandLineRunner {
 
 	@Autowired
 	EnderecoRepository enderecoRepository;
+	
+	@Autowired
+	ItemPedidoRepository itemPedidoRepository;
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -106,6 +109,12 @@ public class SpringmcApplication implements CommandLineRunner {
 
 		pedidoRepository.saveAll(Arrays.asList(ped1));
 		pagamentoRepository.saveAll(Arrays.asList(pagto1));
+		
+		ItemPedido ip1 = new ItemPedido(ped1, p1, 0.00, 1, 2000.00);
+	
+		ped1.getItens().addAll(Arrays.asList(ip1));
+		p1.getItens().addAll(Arrays.asList(ip1));
+		itemPedidoRepository.saveAll(Arrays.asList(ip1));
 
 	}
 

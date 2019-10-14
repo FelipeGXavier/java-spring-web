@@ -3,7 +3,6 @@ package com.felipe.xavier.domain;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -11,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.felipe.xavier.domain.enums.EstadoPagamento;
 
 @Entity
@@ -25,6 +25,7 @@ public abstract class Pagamento implements Serializable {
 	private EstadoPagamento estado;
 	
 	// Mesmo ID do pagamento
+	@JsonBackReference
 	@OneToOne
 	@JoinColumn (name = "pedido_id")
 	@MapsId

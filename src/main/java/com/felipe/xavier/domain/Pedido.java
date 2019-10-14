@@ -2,6 +2,8 @@ package com.felipe.xavier.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -10,7 +12,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class Pedido implements Serializable {
@@ -23,20 +29,29 @@ public class Pedido implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	
 	private Date instante;
 
+	@JsonBackReference
 	@ManyToOne
 	@JoinColumn (name = "cliente_id")
 	private Cliente cliente;
+	
 	
 	@ManyToOne
 	@JoinColumn (name = "endereco_de_entrega_id")
 	private Endereco enderecoDeEntrega;
 	
 	// Mapeamento bidirecional 1 pra 1, id do pedido vai ser igual ao id do pagamento
-	@OneToOne (cascade = CascadeType.PERSIST, mappedBy = "pedido")
+	
+	@JsonManagedReference
+	@OneToOne (cascade = CascadeType.ALL, mappedBy = "pedido")
 	private Pagamento pagamento;
-
+	
+	
+	@OneToMany (mappedBy = "id.pedido")
+	private Set<ItemPedido> itens = new HashSet<>();
+	
 	public Pedido() {
 		
 	}
@@ -112,6 +127,14 @@ public class Pedido implements Serializable {
 
 	public void setPagamento(Pagamento pagamento) {
 		this.pagamento = pagamento;
+	}
+
+	public Set<ItemPedido> getItens() {
+		return itens;
+	}
+
+	public void setItens(Set<ItemPedido> itens) {
+		this.itens = itens;
 	}
 
 }
